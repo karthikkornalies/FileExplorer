@@ -70,7 +70,7 @@ global virtual inherited sharing class qsyd_Folder extends qsyd_Item {
 
     global qsyd_Folder remove() {
         List<qsyd_FE__FileExplorerFolder__c> childFolders;
-        List<qsyd_FE__FileExplorerFile__c> childFiles;
+        List<FileExplorerFile__c> childFiles;
 
         childFolders = [
                 SELECT qsyd_FE__Folder__c
@@ -89,15 +89,15 @@ global virtual inherited sharing class qsyd_Folder extends qsyd_Item {
 
         childFiles = [
                 SELECT qsyd_FE__Folder__c
-                FROM qsyd_FE__FileExplorerFile__c
+                FROM FileExplorerFile__c
                 WHERE qsyd_FE__LinkedEntityId__c = :this.entityId
                 AND qsyd_FE__Folder__c = :this.id
                 WITH SECURITY_ENFORCED
         ];
 
-        childFiles = (List<qsyd_FE__FileExplorerFile__c>) Security.stripInaccessible(AccessType.READABLE, childFiles).getRecords();
+        childFiles = (List<FileExplorerFile__c>) Security.stripInaccessible(AccessType.READABLE, childFiles).getRecords();
 
-        for (qsyd_FE__FileExplorerFile__c f : childFiles) {
+        for (FileExplorerFile__c f : childFiles) {
             f.qsyd_FE__Folder__c = this.folder;
         }
 
