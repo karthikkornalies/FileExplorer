@@ -17,11 +17,11 @@
 
 global inherited sharing class qsyd_FileList implements qsyd_IItemList {
 
-    private Map<Id, qsyd_FE__FileExplorerFile__c> fileExplorerFilesMap;
+    private Map<Id, FileExplorerFile__c> fileExplorerFilesMap;
     private List<qsyd_Item> files;
 
     global qsyd_FileList() {
-        this.fileExplorerFilesMap = new Map<Id, qsyd_FE__FileExplorerFile__c>();
+        this.fileExplorerFilesMap = new Map<Id, FileExplorerFile__c>();
         this.files = new List<qsyd_File>();
     }
 
@@ -36,7 +36,7 @@ global inherited sharing class qsyd_FileList implements qsyd_IItemList {
 
     global qsyd_FileList retrieve(String recordId) {
 
-        this.fileExplorerFilesMap = new Map<Id, qsyd_FE__FileExplorerFile__c>([
+        this.fileExplorerFilesMap = new Map<Id, FileExplorerFile__c>([
                 SELECT qsyd_FE__Folder__c,
                         qsyd_FE__Label__c,
                         qsyd_FE__ContentDocumentId__c,
@@ -47,20 +47,20 @@ global inherited sharing class qsyd_FileList implements qsyd_IItemList {
                         qsyd_FE__FileOwner__r.Name,
                         qsyd_FE__Tags__c,
                         qsyd_FE__ContentSize__c
-                FROM qsyd_FE__FileExplorerFile__c
+                FROM FileExplorerFile__c
                 WHERE qsyd_FE__LinkedEntityId__c = :recordId
                 WITH SECURITY_ENFORCED
                 ORDER BY qsyd_FE__Label__c
         ]);
 
-        this.fileExplorerFilesMap.putAll((List<qsyd_FE__FileExplorerFile__c>) Security.stripInaccessible(AccessType.READABLE, this.fileExplorerFilesMap.values()).getRecords());
+        this.fileExplorerFilesMap.putAll((List<FileExplorerFile__c>) Security.stripInaccessible(AccessType.READABLE, this.fileExplorerFilesMap.values()).getRecords());
 
         return this;
     }
 
     global qsyd_FileList convertToLogical() {
 
-        for (qsyd_FE__FileExplorerFile__c f : this.fileExplorerFilesMap.values()) {
+        for (FileExplorerFile__c f : this.fileExplorerFilesMap.values()) {
             this.files.add(new qsyd_File(f.Id, f.qsyd_FE__Folder__c, f.qsyd_FE__Label__c, f.qsyd_FE__ContentDocumentId__c, f.qsyd_FE__LinkedEntityId__c, f.qsyd_FE__FileType__c, f.qsyd_FE__FileExtension__c, f.qsyd_FE__FileOwner__r.Name, f.qsyd_FE__Tags__c, f.qsyd_FE__ContentSize__c, null));
         }
 
@@ -69,7 +69,7 @@ global inherited sharing class qsyd_FileList implements qsyd_IItemList {
 
     global qsyd_FileList convertToCanonical() {
         for (qsyd_Item f : this.files) {
-            this.fileExplorerFilesMap.put(f.id, new qsyd_FE__FileExplorerFile__c(Id = f.id, qsyd_FE__Folder__c = f.folder));
+            this.fileExplorerFilesMap.put(f.id, new FileExplorerFile__c(Id = f.id, qsyd_FE__Folder__c = f.folder));
         }
         return this;
     }
@@ -78,7 +78,7 @@ global inherited sharing class qsyd_FileList implements qsyd_IItemList {
         return this.files;
     }
 
-    global List<qsyd_FE__FileExplorerFile__c> getCanonicalList() {
+    global List<FileExplorerFile__c> getCanonicalList() {
         return this.fileExplorerFilesMap.values();
     }
 }
