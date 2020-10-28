@@ -65,15 +65,15 @@ public with sharing class qsyd_ContentDocumentTriggerHandler extends TriggerHand
 
         // Check if a file explorer file exists
         List<FileExplorerFile__c> fileList = [
-                SELECT qsyd_FE__ContentDocumentId__c,
-                        qsyd_FE__LinkedEntityId__c,
-                        qsyd_FE__Label__c,
-                        qsyd_FE__FileType__c,
-                        qsyd_FE__FileExtension__c,
-                        qsyd_FE__FileOwner__c,
-                        qsyd_FE__ContentSize__c
+                SELECT ContentDocumentId__c,
+                        LinkedEntityId__c,
+                        Label__c,
+                        FileType__c,
+                        FileExtension__c,
+                        FileOwner__c,
+                        ContentSize__c
                 FROM FileExplorerFile__c
-                WHERE qsyd_FE__ContentDocumentId__c = :cd.Id
+                WHERE ContentDocumentId__c = :cd.Id
                 WITH SECURITY_ENFORCED
         ];
 
@@ -84,13 +84,13 @@ public with sharing class qsyd_ContentDocumentTriggerHandler extends TriggerHand
         }
 
         // TODO: Check for changes before updating
-        file.qsyd_FE__ContentDocumentId__c = cd.Id;
-        file.qsyd_FE__linkedEntityId__c = linkedEntityId;
-        file.qsyd_FE__Label__c = cd.Title;
-        file.qsyd_FE__FileType__c = cd.FileType;
-        file.qsyd_FE__FileExtension__c = cd.FileExtension;
-        file.qsyd_FE__FileOwner__c = cd.OwnerId;
-        file.qsyd_FE__ContentSize__c = cd.ContentSize;
+        file.ContentDocumentId__c = cd.Id;
+        file.linkedEntityId__c = linkedEntityId;
+        file.Label__c = cd.Title;
+        file.FileType__c = cd.FileType;
+        file.FileExtension__c = cd.FileExtension;
+        file.FileOwner__c = cd.OwnerId;
+        file.ContentSize__c = cd.ContentSize;
 
         this.accessDecision = Security.stripInaccessible(AccessType.UPSERTABLE,
                 new List<FileExplorerFile__c>{
@@ -110,7 +110,7 @@ public with sharing class qsyd_ContentDocumentTriggerHandler extends TriggerHand
         List<FileExplorerFile__c> files = [
                 SELECT Id
                 FROM FileExplorerFile__c
-                WHERE qsyd_FE__ContentDocumentId__c IN :contentDocumentIds
+                WHERE ContentDocumentId__c IN :contentDocumentIds
                 WITH SECURITY_ENFORCED
         ];
 
