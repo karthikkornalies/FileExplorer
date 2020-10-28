@@ -53,7 +53,7 @@ global with sharing class qsydFileExplorerController {
             List<FileExplorerFile__c> files = [
                     SELECT Id, Folder__c
                     FROM FileExplorerFile__c
-                    WHERE  IN :contentDocumentIds
+                    WHERE ContentDocumentId__c IN :contentDocumentIds
             ];
 
             accessDecision = Security.stripInaccessible(AccessType.READABLE, files);
