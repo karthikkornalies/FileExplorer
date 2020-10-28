@@ -51,7 +51,7 @@ global with sharing class qsydFileExplorerController {
     public static void setFolder(List<Id> contentDocumentIds, String folderId) {
         try {
             List<FileExplorerFile__c> files = [
-                    SELECT Id, qsyd_FE__Folder__c
+                    SELECT Id, Folder__c
                     FROM FileExplorerFile__c
                     WHERE qsyd_FE__ContentDocumentId__c IN :contentDocumentIds
             ];
@@ -60,7 +60,7 @@ global with sharing class qsydFileExplorerController {
             files = (List<FileExplorerFile__c>) accessDecision.getRecords();
 
             for (FileExplorerFile__c file : files) {
-                file.qsyd_FE__Folder__c = folderId;
+                file.Folder__c = folderId;
             }
 
             accessDecision = Security.stripInaccessible(AccessType.UPDATABLE, files);
