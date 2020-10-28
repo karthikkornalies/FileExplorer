@@ -79,14 +79,14 @@ global with sharing class qsydFileExplorerControllerTest {
         List<Id> contentDocumentIds = new List<Id>();
         contentDocumentIds.add(contentDocumentId);
 
-        qsyd_FE__FileExplorerFile__c penguinsFileBefore = [SELECT Id, qsyd_FE__Folder__c FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__ContentDocumentId__c = :contentDocumentId LIMIT 1];
+        FileExplorerFile__c penguinsFileBefore = [SELECT Id, qsyd_FE__Folder__c FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__ContentDocumentId__c = :contentDocumentId LIMIT 1];
 
         qsyd_FE__FileExplorerFolder__c qFolder = [SELECT Id FROM qsyd_FE__FileExplorerFolder__c WHERE qsyd_FE__Label__c = 'qFolder' LIMIT 1];
 
         System.assertEquals(null, penguinsFileBefore.qsyd_FE__Folder__c);
         qsydFileExplorerController.setFolder(contentDocumentIds, qFolder.Id);
 
-        qsyd_FE__FileExplorerFile__c penguinsFileAfter = [SELECT Id, qsyd_FE__Folder__c FROM qsyd_FE__FileExplorerFile__c WHERE Id = :penguinsFileBefore.Id];
+        FileExplorerFile__c penguinsFileAfter = [SELECT Id, qsyd_FE__Folder__c FROM FileExplorerFile__c WHERE Id = :penguinsFileBefore.Id];
 
         System.assertEquals(qFolder.Id, penguinsFileAfter.qsyd_FE__Folder__c);
 
@@ -105,12 +105,12 @@ global with sharing class qsydFileExplorerControllerTest {
         List<Id> contentDocumentIds = new List<Id>();
         contentDocumentIds.add(contentDocumentId);
 
-        qsyd_FE__FileExplorerFile__c penguinsFileBefore = [SELECT Id, qsyd_FE__Tags__c FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__ContentDocumentId__c = :contentDocumentId LIMIT 1];
+        FileExplorerFile__c penguinsFileBefore = [SELECT Id, qsyd_FE__Tags__c FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__ContentDocumentId__c = :contentDocumentId LIMIT 1];
 
         System.assertEquals(null, penguinsFileBefore.qsyd_FE__Tags__c);
         qsydFileExplorerController.updateTags(penguinsFileBefore.Id, 'tags;tag');
 
-        qsyd_FE__FileExplorerFile__c penguinsFileAfter = [SELECT Id, qsyd_FE__Tags__c FROM qsyd_FE__FileExplorerFile__c WHERE Id = :penguinsFileBefore.Id];
+        FileExplorerFile__c penguinsFileAfter = [SELECT Id, qsyd_FE__Tags__c FROM FileExplorerFile__c WHERE Id = :penguinsFileBefore.Id];
 
         System.assertEquals('tags;tag', penguinsFileAfter.qsyd_FE__Tags__c);
 
@@ -141,7 +141,7 @@ global with sharing class qsydFileExplorerControllerTest {
         setupTestData();
         Test.startTest();
         Account a = [SELECT Id FROM Account WHERE Name = 'TestAccount' LIMIT 1];
-        qsyd_FE__FileExplorerFile__c penguinsFile = [SELECT Id FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins' LIMIT 1];
+        FileExplorerFile__c penguinsFile = [SELECT Id FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins' LIMIT 1];
         delete penguinsFile;
         Boolean actual = qsydFileExplorerController.checkSyncStatus(a.Id);
         System.assertEquals(false, actual);
@@ -157,15 +157,15 @@ global with sharing class qsydFileExplorerControllerTest {
         List<ContentDocumentLink> cdlList = [SELECT Id, ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :a.Id AND ContentDocument.Title = 'Penguins'];
         String contentDocumentId = cdlList[0].ContentDocumentId;
 
-        qsyd_FE__FileExplorerFile__c penguinsFile = [SELECT Id FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins' LIMIT 1];
+        FileExplorerFile__c penguinsFile = [SELECT Id FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins' LIMIT 1];
         delete penguinsFile;
 
-        List<qsyd_FE__FileExplorerFile__c> beforeSyncFileList = [SELECT Id FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins'];
+        List<FileExplorerFile__c> beforeSyncFileList = [SELECT Id FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins'];
         System.assertEquals(0, beforeSyncFileList.size());
 
         qsydFileExplorerController.syncFiles(a.Id);
 
-        List<qsyd_FE__FileExplorerFile__c> afterSyncFileList = [SELECT Id, qsyd_FE__ContentDocumentId__c, qsyd_FE__LinkedEntityId__c FROM qsyd_FE__FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins'];
+        List<FileExplorerFile__c> afterSyncFileList = [SELECT Id, qsyd_FE__ContentDocumentId__c, qsyd_FE__LinkedEntityId__c FROM FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = :a.Id AND qsyd_FE__Label__c = 'Penguins'];
 
         System.assertEquals(1, afterSyncFileList.size());
         System.assertEquals(a.Id, afterSyncFileList[0].qsyd_FE__LinkedEntityId__c);
@@ -236,10 +236,10 @@ global with sharing class qsydFileExplorerControllerTest {
         json = '{"documentId":"' + cd.Id + '","entityId":"' + a.Id + '","text":"new_file","folder":null,"icon":null,"id":null,"owner":null,"size":0,"tags":null,"type":null}';
         String item = qsydFileExplorerController.postItem(json);
 
-        List<qsyd_FE__FileExplorerFile__c> files = [
+        List<FileExplorerFile__c> files = [
                 SELECT Id,
                         qsyd_FE__Label__c
-                FROM qsyd_FE__FileExplorerFile__c
+                FROM FileExplorerFile__c
                 WHERE qsyd_FE__Label__c = 'new_file'
         ];
         Test.stopTest();
