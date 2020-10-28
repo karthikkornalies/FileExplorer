@@ -53,7 +53,7 @@ global with sharing class qsydFileExplorerController {
             List<FileExplorerFile__c> files = [
                     SELECT Id, Folder__c
                     FROM FileExplorerFile__c
-                    WHERE qsyd_FE__ContentDocumentId__c IN :contentDocumentIds
+                    WHERE  IN :contentDocumentIds
             ];
 
             accessDecision = Security.stripInaccessible(AccessType.READABLE, files);
@@ -76,7 +76,7 @@ global with sharing class qsydFileExplorerController {
         List<FileExplorerFile__c> file = new List<FileExplorerFile__c>();
         try {
             List<FileExplorerFile__c> files = [
-                    SELECT Id, qsyd_FE__Tags__c
+                    SELECT Id, Tags__c
                     FROM FileExplorerFile__c
                     WHERE Id = :fileId
                     WITH SECURITY_ENFORCED
@@ -86,7 +86,7 @@ global with sharing class qsydFileExplorerController {
             files = (List<FileExplorerFile__c>) accessDecision.getRecords();
 
             if (files.size() > 0) {
-                files[0].qsyd_FE__Tags__c = tags;
+                files[0].Tags__c = tags;
 
                 accessDecision = Security.stripInaccessible(AccessType.UPDATABLE, files);
                 UPDATE accessDecision.getRecords();
@@ -107,7 +107,7 @@ global with sharing class qsydFileExplorerController {
         Integer countDocumentLink = 0, countFile = 0;
         try {
             countDocumentLink = database.countQuery('SELECT count() From ContentDocumentLink WHERE IsDeleted = FALSE AND LinkedEntityId = \'' + recordId + '\'');
-            countFile = database.countQuery('SELECT count() From FileExplorerFile__c WHERE qsyd_FE__LinkedEntityId__c = \'' + recordId + '\'');
+            countFile = database.countQuery('SELECT count() From FileExplorerFile__c WHERE LinkedEntityId__c = \'' + recordId + '\'');
 
             return (countFile == countDocumentLink);
 
@@ -147,16 +147,16 @@ global with sharing class qsydFileExplorerController {
             ]);
 
             currentFileList = [
-                    SELECT qsyd_FE__ContentDocumentId__c
+                    SELECT ContentDocumentId__c
                     FROM FileExplorerFile__c
-                    WHERE qsyd_FE__LinkedEntityId__c = :recordId
+                    WHERE LinkedEntityId__c = :recordId
             ];
 
             accessDecision = Security.stripInaccessible(AccessType.READABLE, currentFileList);
             currentFileList = (List<FileExplorerFile__c>) accessDecision.getRecords();
 
             for (Integer cfi = 0; cfi < currentFileList.size(); cfi++) {
-                currentFileMap.put(currentFileList[cfi].qsyd_FE__ContentDocumentId__c, currentFileList[cfi]);
+                currentFileMap.put(currentFileList[cfi].ContentDocumentId__c, currentFileList[cfi]);
             }
 
             if (!contentDocumentLinks.isEmpty()) {
@@ -167,13 +167,13 @@ global with sharing class qsydFileExplorerController {
                     currentContentDocumentMap.put(cdl.ContentDocumentId, cdl);
                     if (!currentFileMap.containsKey(cdl.ContentDocumentId)) {
                         FileExplorerFile__c fe = new FileExplorerFile__c();
-                        fe.qsyd_FE__ContentDocumentId__c = cdl.ContentDocumentId;
-                        fe.qsyd_FE__LinkedEntityId__c = recordId;
-                        fe.qsyd_FE__Label__c = cdl.ContentDocument.Title;
-                        fe.qsyd_FE__FileType__c = cdl.ContentDocument.FileType;
-                        fe.qsyd_FE__FileExtension__c = cdl.ContentDocument.FileExtension;
-                        fe.qsyd_FE__FileOwner__c = cdl.ContentDocument.OwnerId;
-                        fe.qsyd_FE__ContentSize__c = cdl.ContentDocument.ContentSize;
+                        fe.ContentDocumentId__c = cdl.ContentDocumentId;
+                        fe.LinkedEntityId__c = recordId;
+                        fe.Label__c = cdl.ContentDocument.Title;
+                        fe.FileType__c = cdl.ContentDocument.FileType;
+                        fe.FileExtension__c = cdl.ContentDocument.FileExtension;
+                        fe.FileOwner__c = cdl.ContentDocument.OwnerId;
+                        fe.ContentSize__c = cdl.ContentDocument.ContentSize;
                         insertFileList.add(fe);
                     }
                 }
