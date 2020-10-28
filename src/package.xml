@@ -26,10 +26,10 @@
         <members>ContentDocumentTrigger</members>
         <name>ApexTrigger</name>
     </types>
-    <types>
+    <!--<types>
         <members>Q_Sydney_Logo</members>
         <name>ContentAsset</name>
-    </types>
+    </types> -->
     <types>
         <members>File_Explorer</members>
         <name>CustomApplication</name>
