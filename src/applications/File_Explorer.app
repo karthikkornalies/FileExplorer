@@ -10,7 +10,7 @@
     </actionOverrides>
     <brand>
         <headerColor>#7BC4B9</headerColor>
-        <logo></logo>
+       <!-- <logo></logo>-->
         <logoVersion>1</logoVersion>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
