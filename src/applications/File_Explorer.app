@@ -10,8 +10,8 @@
     </actionOverrides>
     <brand>
         <headerColor>#7BC4B9</headerColor>
-       <!-- <logo></logo>-->
-        <logoVersion>1</logoVersion>
+       <!-- <logo></logo>
+        <logoVersion>1</logoVersion>-->
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
     <formFactors>Small</formFactors>
